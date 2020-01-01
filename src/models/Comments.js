@@ -6,7 +6,10 @@ const commentSchema = new Schema({
     commented_by: {
         type:String
     },
-    post_id: {
+    postId: {
+        type: String
+    },
+    userId: {
         type: String
     },
     comment: {

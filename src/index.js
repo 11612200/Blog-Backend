@@ -25,10 +25,15 @@ app.post('/signUp',Authenticate.signUp);
 app.post('/signIn',Authenticate.signIn);
 app.post('/createPost',PostService.createPost);
 app.post('/createComment',CommentService.createComment);
+
 app.put('/updateUser',UserService.updateUser);
 app.put('/updatePost',PostService.updatePost);
 app.put('/updateComment',CommentService.updateComment);
+
 app.delete('/deletePost',PostService.deletePost);
+
+app.get('/userProfile',UserService.userProfile);
+
 
 app.listen(port,() => {
     console.log('Listening to port '+ port)

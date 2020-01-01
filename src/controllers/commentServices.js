@@ -2,9 +2,9 @@ const Comment = require('../models/Comments')
 const comments = Comment.Comments
 
 var createComment = function(req,res) {
-    const comments = new comments(req.body)
-    comments.save().then(() => {
-        res.send(comments)
+    const comment = new comments(req.body)
+    comment.save().then(() => {
+        res.send(comment)
     }).catch((error) => {
         res.status(400).send(error)
     })

@@ -11,7 +11,7 @@ const createPost = function(req,res){
     })
 }
 
-var arr = ["title","description"]
+var fields = ["title","description"]
 
 const updatePost = function(req,res) {
     var postId = req.headers.postid
@@ -20,16 +20,16 @@ const updatePost = function(req,res) {
     console.log(postId);
     var data = req.body;
     console.log(data)
-    var j = {};
-    for(i in arr){
-        if(data[arr[i]] && data[arr[i]] != ""){
-            j[arr[i]] = data[arr[i]];
+    var json = {};
+    for(i in fields){
+        if(data[fields[i]] && data[fields[i]] != ""){
+            json[fields[i]] = data[fields[i]];
         }
     }
-    j["updated_at"] = Date.now()
-    console.log(j);
-        post.update({_id: postId},{
-            $set: j 
+    json["updated_at"] = Date.now()
+    console.log(json);
+        post.updateMany({_id: postId},{
+            $set: json 
         },
         function(err,obj){
             if(err){
@@ -44,7 +44,7 @@ const updatePost = function(req,res) {
 
 var deletePost = function(req,res){
     var postId = req.headers.postid;
-    console.log(mongoose.Types.ObjectId(postId));
+    console.log(postId);
     post.deleteOne({ _id: postId },
         function (err) {
             if (err) {
