@@ -20,7 +20,6 @@ const updateUser = function(req,res) {
         }
     }
     json["updated_at"] = Date.now()
-    // updated_at = Date.now()
     user.update({_id: userId},{
         $set: json
     },
