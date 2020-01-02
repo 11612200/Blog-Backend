@@ -11,13 +11,6 @@ var fields = ["first_name","last_name","emailID","password","bio","gender","age"
 
 const updateUser = function(req,res) {
     userId = req.headers.userid
-    // first_name = req.body.first_name
-    // last_name = req.body.last_name
-    // emailID = req.body.emailID
-    // password = req.body.password
-    // bio = req.body.bio
-    // gender = req.body.gender
-    // age = req.body.age
     var data = req.body;
     console.log(data)
     var json = {};
@@ -41,40 +34,64 @@ const updateUser = function(req,res) {
 }
 
 const userProfile = function(req,res) {
-    var params;
+    var params = {} 
     var userId = req.headers.userid
-    user.findOne({_id: userId},
-      function(err,User){ 
-          if(err){
-              console.log(err)
-              res.send('Please try again later')
-          }else {
-                  params = {
-                  "Name" : User.first_name,
-                  "Email" : User.emailID,
-                  "Gender": User.gender,
-                  "Age": User.age
-              }
-          }
-      }    
-    )
-    post.find({userId: userId},
-        function(err,Posts) {
-            if(err){
-                console.log(err)
-                res.send('Please try again later')
-            }
-            params["Total no of posts"]= Posts.length;
+
+    const f1 = function(){
+        return new Promise( (resolve, reject) => {
+            user.findOne({_id: userId},
+                async function(err,User){ 
+                    if(err){params
+                        console.log(err);
+                        return reject(err);
+                    }
+                    else {
+                        params["Name"] = User.first_name;
+                        params["Email"] =   User.emailID;
+                        params["Gender"] =  User.gender;
+                        params["Age"] =     User.age;
+                        return resolve();
+                    }
+                }    
+              )
+        })
+    }
+
+    const f2 = function(){
+        return new Promise((resolve, reject) => {
+            post.find({userId: userId},
+                async function(err,Posts) {
+                    if(err){
+                        console.log(err);
+                        return reject(err);
+                    }
+                    params["Total no. of Posts"] = Posts.length
+                    return resolve();
+            })
+        })
+    }
+    
+    const f3 = function(){
+        return new Promise((resolve, reject) => {
+            comments.find({userId: userId},
+                async function(err,Comments) {
+                    if(err){
+                        console.log(err)
+                        return reject(err);
+                    }
+                    params["Total no. of Comments"] = Comments.length
+                    return resolve();
+            })
+        })
+    }
+    Promise.all([f1(), f2(), f3()]).then(function(data){
+        // data[0]["Total no. of Posts"] = data[1];
+        // data[0]["Total no. of Comments"] = data[2];
+        res.send(params);
+    }).catch(function(err){
+        res.send('Please try again later'+err);
     })
-    comments.find({userId: userId},
-        function(err,Comments) {
-            if(err){
-                console.log(err)
-                res.send('Please try again later')
-            }
-            params["Total no of comments"]= Comments.length;
-            res.send(params)
-    })
+    
 }
 
 module.exports = {
