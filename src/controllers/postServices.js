@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const utils = require('./utils') 
 const Post = require('../models/Posts')
 const post = Post.Posts
 
@@ -7,9 +7,9 @@ const createPost = function(req,res){
     const posts = new post(req.body)
     posts.userId = req.headers.userid;
     posts.save().then(() => {
-        res.send(posts)
-    }).catch((error) => {
-        res.status(400).send(error)
+        utils.sendResponse(res,200,true,'Post created successfully',posts);
+    }).catch((err) => {
+        utils.sendResponse(res, 400, false, 'Please try again later.',err);
     })
 }
 
@@ -17,8 +17,6 @@ var fields = ["title","description"]
 
 const updatePost = function(req,res) {
     var postId = req.headers.postid
-    // var title = req.body.title
-    // var description = req.body.description
     console.log(postId);
     var data = req.body;
     console.log(data)
@@ -33,12 +31,12 @@ const updatePost = function(req,res) {
         post.updateMany({_id: postId},{
             $set: json 
         },
-        function(err,obj){
+        function(err,Posts){
             if(err){
                 console.log(err);
-                res.send('Please try again later')
+                utils.sendResponse(res, 400, false, 'Please try again later.',err);
             }else {
-                res.send('Post updated successfully')
+                utils.sendResponse(res,200,true,'Post Updated successfully',Posts);
             }
         
         });
@@ -51,18 +49,15 @@ const deletePost = function(req,res) {
         function (err) {
             if (err) {
                 console.log(err);
-                res.send('Please try again later.');
+                utils.sendResponse(res, 400, false, 'Please try again later.',err);
             }
-            res.send('Post deleted successfully.');
+            utils.sendResponse(res,200,true,'Post deleted successfully');
         });
 
 }
 
 
 const postFilter = function(req,res) {
-
-    // { airedAt: { $gte: '1987-10-19', $lte: '1987-10-26' } }
-
     var fields = ["likes","author"]
     var params = req.query;
     var jsonData = {}
@@ -81,9 +76,9 @@ const postFilter = function(req,res) {
         function(err,Posts){
             if(err){
                 console.log(err);
-                res.send('Please try again later')
+                utils.sendResponse(res, 400, false, 'Please try again later.',err);
             }else {
-                res.send(Posts)
+                utils.sendResponse(res,200,true,'Filtered Results',Posts);
             }
         
         });
@@ -91,8 +86,6 @@ const postFilter = function(req,res) {
 
 const likePost = function(req,res) {
     var postId = req.headers.postid;
-    var valid = false;
-    var likes;
     post.findOneAndUpdate({_id:postId},{ 
         $inc: {
              likes: 1
@@ -101,9 +94,9 @@ const likePost = function(req,res) {
     function(err,Posts){
         if(err){
             console.log(err);
-            res.send('Please try again later')
+            utils.sendResponse(res, 500, false, 'Please try again later.',err);
         }else {
-            res.send("Liked Post Successfully");
+            utils.sendResponse(res,200,true,'Liked Post successfully',Posts);
         }
 
     });

@@ -1,12 +1,18 @@
 const jwt = require('jsonwebtoken')
+const passwordHash = require('password-hash')
 const User = require('../models/Users')
+const utils = require('./utils')
 const user = User.Users
 
 var signUp = function(req,res){
     var first_name = req.body.first_name
     var last_name = req.body.last_name
     var emailID = req.body.emailID
-    var password = req.body.password
+    var password;
+    if(req.body.password){
+         password = passwordHash.generate(req.body.password)
+    }
+    console.log('password: '+ password);
     var bio = req.body.bio
     var gender = req.body.gender
     var age = req.body.age
@@ -22,15 +28,9 @@ var signUp = function(req,res){
 
     });
     newUser.save().then(()=>{
-        res.send('Sign Up Successful')
-    }).catch((error) =>{
-        if(error = 'ValidationError'){
-           // res.send('User Already Exists')
-           res.send(error);
-        }
-        else{
-            res.send('Please Try Again Later')
-        }
+        utils.sendResponse(res,200,true,'Sign up Successful')
+    }).catch((err) =>{
+           utils.sendResponse(res, 400, false, err);
     });
 }
 
@@ -39,8 +39,8 @@ var signIn = function(req,res) {
     var password = req.body.password;
     user.findOne({emailID: emailID}).then((userObj) => {
         if(userObj){
-            if(userObj.password!=password){
-                res.send('Wrong Password')
+            if(!passwordHash.verify(password,userObj.password)){
+                utils.sendResponse(res,400,false,'Wrong Password');
             }else {
                 const payload = {
                     userId: userObj._id
@@ -49,14 +49,13 @@ var signIn = function(req,res) {
                     expiresIn: 24*60*60
                 });
                 var params = {
-                    userObj: userObj,
                     token: token
                 }
-                res.send('Sign In Successful'+ userObj+'key: '+params.token);
+                utils.sendResponse(res,200,true,'Sign In Successful',params);
             }
         }
-    }).catch((error) => {
-        res.send('No user found');
+    }).catch((err) => {
+        utils.sendResponse(res,404,false,'User Not Found');
     });
 }
 

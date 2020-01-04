@@ -1,3 +1,4 @@
+const utils = require('./utils')
 const User = require('../models/Users')
 const user = User.Users
 
@@ -25,9 +26,9 @@ const updateUser = function(req,res) {
     },
     function(err,obj) {
         if(err){
-            res.send('Please try again later');
+            utils.sendResponse(res, 400, false, 'Please try again later.',err);
         }else{
-            res.send('User Updated Successfully')
+            utils.sendResponse(res,200,true,'User Updated Successfully');
         }
     })
 }
@@ -86,9 +87,9 @@ const userProfile = function(req,res) {
     Promise.all([f1(), f2(), f3()]).then(function(data){
         // data[0]["Total no. of Posts"] = data[1];
         // data[0]["Total no. of Comments"] = data[2];
-        res.send(params);
+        utils.sendResponse(res,200,true,'Profile',params);
     }).catch(function(err){
-        res.send('Please try again later'+err);
+        utils.sendResponse(res, 400, false, 'Please try again later.',err);
     })
     
 }

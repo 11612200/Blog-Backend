@@ -1,14 +1,15 @@
 const textSearch = require('mongoose-text-search')
 const Comment = require('../models/Comments')
+const utils = require('./utils')
 const comments = Comment.Comments
 
 var createComment = function(req,res) {
     const comment = new comments(req.body)
     comment.userId = req.headers.userid;
-    comment.save().then(() => {
-        res.send(comment)
-    }).catch((error) => {
-        res.status(400).send(error)
+    comment.save().then((result) => {
+        utils.sendResponse(res,200,true,'Comment created successfully',result._doc);
+    }).catch((err) => {
+        utils.sendResponse(res, 400, false, 'Please try again later.',err);
     })
 }
 
@@ -22,12 +23,12 @@ var updateComment = function(req,res) {
             updated_at: updated_at
         }
     },
-    function(err,obj){
+    function(err,Comments){
         if(err){
             console.log(err);
-            res.send('Please try again Later')
+            utils.sendResponse(res, 400, false, 'Please try again later.',err);
         }else {
-            res.send('Comment Updated successfully: '+obj);
+            utils.sendResponse(res,200,true,'Comment Updated successfully',Comments);
         }
     });
 }
@@ -35,13 +36,13 @@ var updateComment = function(req,res) {
 
 const searchSortComments = function(req,res) {
     var searchString = req.query.searchstring
-    comments.find({$text: {$search: searchString}},
+    comments.find({comment: new RegExp(searchString, "i")},
     function(err, Comments) {
         if(err){
             console.log(err);
-            res.send('Please try again Later')
+            utils.sendResponse(res, 400, false, 'Please try again later.',err);
         }else {
-            res.send(Comments);
+            utils.sendResponse(res,200,true,'Searched Successfully',Comments);
         }  
     }).sort({updated_at:1});
 }

@@ -14,8 +14,7 @@ const commentSchema = new Schema({
         type: String
     },
     comment: {
-        type: [String],
-        text: true,
+        type: String,
         required: true
     },
     created_at: {

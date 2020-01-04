@@ -5,15 +5,6 @@ const utils = require('./controllers/utils')
 const app = express()
 const port = process.env.PORT||5000
 
-// const User = require('./models/Users')
-// const userSchema = User.Users
-
-// const Post = require('./models/Posts')
-// const postSchema = Post.Posts
-
-// const Comment = require('./models/Comments')
-// const commentSchema = Comment.Comments
-
 app.use(express.json()); 
 
 const Authenticate = require('./controllers/authenticate')
@@ -37,6 +28,8 @@ app.delete('/deletePost',utils.isTokenValid,PostService.deletePost);
 app.get('/userProfile',utils.isTokenValid,UserService.userProfile);
 app.get('/filterPost',utils.isTokenValid,PostService.postFilter);
 app.get('/searchSortComments',utils.isTokenValid,CommentService.searchSortComments);
+
+app.use('/*',(req,res)=>{ utils.sendResponse(res, 404, false, 'Route Not Found'); }) 
 
 
 app.listen(port,() => {

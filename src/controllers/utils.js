@@ -6,7 +6,6 @@ var isTokenValid = function(req,res,next) {
         var valid = false;
         jwt.verify(token,'abcd',(err,decode) => {
             if(err == null){
-                // console.log("error: "+err);
                 valid = true;
             }
         })
@@ -24,6 +23,18 @@ var isTokenValid = function(req,res,next) {
     }
 }
 
+var sendResponse = function(resObj, status, success, msg, extraParams = {}){
+    var responseObj = {
+        success : success,
+        msg     : msg,
+    };
+    console.log("extra:"+JSON.stringify(extraParams));
+    responseObj = Object.assign(responseObj, extraParams);
+    console.log("response: "+JSON.stringify(responseObj));
+    resObj.status(status).send(responseObj);
+}
+
 module.exports = {
-    isTokenValid
+    isTokenValid,
+    sendResponse
 }

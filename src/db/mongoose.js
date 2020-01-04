@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const validator = require('validator')
 
 mongoose.connect('mongodb+srv://1998sangeetasharma:sangeeta123@cluster0-hczzk.mongodb.net/blog',{
     useNewUrlParser: true,
