@@ -3,7 +3,9 @@ const Post = require('../models/Posts')
 const post = Post.Posts
 
 const createPost = function(req,res){
+    console.log("userid:"+req.headers.userid);
     const posts = new post(req.body)
+    posts.userId = req.headers.userid;
     posts.save().then(() => {
         res.send(posts)
     }).catch((error) => {
@@ -85,12 +87,33 @@ const postFilter = function(req,res) {
             }
         
         });
-} 
+}
+
+const likePost = function(req,res) {
+    var postId = req.headers.postid;
+    var valid = false;
+    var likes;
+    post.findOneAndUpdate({_id:postId},{ 
+        $inc: {
+             likes: 1
+            } 
+    },
+    function(err,Posts){
+        if(err){
+            console.log(err);
+            res.send('Please try again later')
+        }else {
+            res.send("Liked Post Successfully");
+        }
+
+    });
+}
 
 
 module.exports = {
     createPost,
     updatePost,
     deletePost,
-    postFilter
+    postFilter,
+    likePost
 }

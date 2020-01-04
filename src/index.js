@@ -1,5 +1,6 @@
 const express = require('express')
 require('./db/mongoose')
+const utils = require('./controllers/utils')
 
 const app = express()
 const port = process.env.PORT||5000
@@ -23,18 +24,20 @@ const UserService = require('./controllers/userServices')
 
 app.post('/signUp',Authenticate.signUp);
 app.post('/signIn',Authenticate.signIn);
-app.post('/createPost',PostService.createPost);
-app.post('/createComment',CommentService.createComment);
+app.post('/createPost',utils.isTokenValid,PostService.createPost);
+app.post('/createComment',utils.isTokenValid,CommentService.createComment);
 
-app.put('/updateUser',UserService.updateUser);
-app.put('/updatePost',PostService.updatePost);
-app.put('/updateComment',CommentService.updateComment);
+app.put('/updateUser',utils.isTokenValid,UserService.updateUser);
+app.put('/updatePost',utils.isTokenValid,PostService.updatePost);
+app.put('/likePost',utils.isTokenValid,PostService.likePost);
+app.put('/updateComment',utils.isTokenValid,CommentService.updateComment);
 
-app.delete('/deletePost',PostService.deletePost);
+app.delete('/deletePost',utils.isTokenValid,PostService.deletePost);
 
-app.get('/userProfile',UserService.userProfile);
-app.get('/filterPost',PostService.postFilter);
-app.get('/searchSortComments',CommentService.searchSortComments);
+app.get('/userProfile',utils.isTokenValid,UserService.userProfile);
+app.get('/filterPost',utils.isTokenValid,PostService.postFilter);
+app.get('/searchSortComments',utils.isTokenValid,CommentService.searchSortComments);
+
 
 app.listen(port,() => {
     console.log('Listening to port '+ port)

@@ -7,14 +7,16 @@ const commentSchema = new Schema({
         type:String
     },
     postId: {
-        type: String
+        type: String,
+        required: true
     },
     userId: {
         type: String
     },
     comment: {
         type: [String],
-        text: true
+        text: true,
+        required: true
     },
     created_at: {
         type: Date,

@@ -24,8 +24,9 @@ var signUp = function(req,res){
     newUser.save().then(()=>{
         res.send('Sign Up Successful')
     }).catch((error) =>{
-        if(error.emailID = 'ValidationError'){
-            res.send('User Already Exists')
+        if(error = 'ValidationError'){
+           // res.send('User Already Exists')
+           res.send(error);
         }
         else{
             res.send('Please Try Again Later')

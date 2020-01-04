@@ -5,12 +5,17 @@ var isTokenValid = function(req,res,next) {
     if(token){
         var valid = false;
         jwt.verify(token,'abcd',(err,decode) => {
-            if(err == NULL){
-                valid: true;
+            if(err == null){
+                // console.log("error: "+err);
+                valid = true;
             }
         })
         if(valid){
-            next()
+            var decodededToken = jwt.decode(token);
+            console.log("decoded userid: "+decodededToken.userId);
+            req.headers.userid = decodededToken.userId;
+            console.log("userid utils:"+req.headers.userid);
+            next();
         }else{
             return res.send('Session Expired')
         }

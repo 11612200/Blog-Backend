@@ -4,6 +4,7 @@ const comments = Comment.Comments
 
 var createComment = function(req,res) {
     const comment = new comments(req.body)
+    comment.userId = req.headers.userid;
     comment.save().then(() => {
         res.send(comment)
     }).catch((error) => {
