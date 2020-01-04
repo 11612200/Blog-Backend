@@ -42,7 +42,7 @@ const updatePost = function(req,res) {
         });
 }
 
-var deletePost = function(req,res){
+const deletePost = function(req,res) {
     var postId = req.headers.postid;
     console.log(postId);
     post.deleteOne({ _id: postId },
@@ -57,8 +57,40 @@ var deletePost = function(req,res){
 }
 
 
+const postFilter = function(req,res) {
+
+    // { airedAt: { $gte: '1987-10-19', $lte: '1987-10-26' } }
+
+    var fields = ["likes","author"]
+    var params = req.query;
+    var jsonData = {}
+    for( i in fields){
+        if(params[fields[i]] && params[fields[i]] !== "" ){
+            jsonData[fields[i]] = params[fields[i]]
+        }
+    }
+
+    if(params.startDate && params.startDate !== "" ){
+        jsonData["updated_at"] = {  $gte: new Date(new Date(params.startDate).setHours(00, 00, 00)),
+            $lt: new Date(new Date(params.endDate).setHours(23, 59, 59)) }       
+    }
+
+    post.find(jsonData,
+        function(err,Posts){
+            if(err){
+                console.log(err);
+                res.send('Please try again later')
+            }else {
+                res.send(Posts)
+            }
+        
+        });
+} 
+
+
 module.exports = {
     createPost,
     updatePost,
-    deletePost
+    deletePost,
+    postFilter
 }

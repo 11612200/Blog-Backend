@@ -33,7 +33,8 @@ app.put('/updateComment',CommentService.updateComment);
 app.delete('/deletePost',PostService.deletePost);
 
 app.get('/userProfile',UserService.userProfile);
-
+app.get('/filterPost',PostService.postFilter);
+app.get('/searchSortComments',CommentService.searchSortComments);
 
 app.listen(port,() => {
     console.log('Listening to port '+ port)

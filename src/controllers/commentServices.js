@@ -1,3 +1,4 @@
+const textSearch = require('mongoose-text-search')
 const Comment = require('../models/Comments')
 const comments = Comment.Comments
 
@@ -30,7 +31,22 @@ var updateComment = function(req,res) {
     });
 }
 
+
+const searchSortComments = function(req,res) {
+    var searchString = req.query.searchstring
+    comments.find({$text: {$search: searchString}},
+    function(err, Comments) {
+        if(err){
+            console.log(err);
+            res.send('Please try again Later')
+        }else {
+            res.send(Comments);
+        }  
+    }).sort({updated_at:1});
+}
+
 module.exports = {
     createComment,
-    updateComment  
+    updateComment,
+    searchSortComments
 }

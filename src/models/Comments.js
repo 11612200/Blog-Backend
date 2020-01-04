@@ -13,7 +13,8 @@ const commentSchema = new Schema({
         type: String
     },
     comment: {
-        type: String
+        type: [String],
+        text: true
     },
     created_at: {
         type: Date,
