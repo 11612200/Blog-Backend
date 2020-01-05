@@ -53,6 +53,8 @@ var signIn = function(req,res) {
                 }
                 utils.sendResponse(res,200,true,'Sign In Successful',params);
             }
+        }else {
+            utils.sendResponse(res,404,false,'User Not Found');
         }
     }).catch((err) => {
         utils.sendResponse(res,404,false,'User Not Found');
