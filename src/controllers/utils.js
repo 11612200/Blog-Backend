@@ -29,7 +29,9 @@ var sendResponse = function(resObj, status, success, msg, extraParams = {}){
         msg     : msg,
     };
     console.log("extra:"+JSON.stringify(extraParams));
-    responseObj = Object.assign(responseObj, extraParams);
+    if(extraParams !== {}){
+    responseObj.outputObj = extraParams;    
+    }
     console.log("response: "+JSON.stringify(responseObj));
     resObj.status(status).send(responseObj);
 }

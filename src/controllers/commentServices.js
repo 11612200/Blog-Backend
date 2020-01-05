@@ -7,7 +7,7 @@ var createComment = function(req,res) {
     const comment = new comments(req.body)
     comment.userId = req.headers.userid;
     comment.save().then((result) => {
-        utils.sendResponse(res,200,true,'Comment created successfully',result._doc);
+        utils.sendResponse(res,200,true,'Comment created successfully',result);
     }).catch((err) => {
         utils.sendResponse(res, 400, false, 'Please try again later.',err);
     })
@@ -28,7 +28,7 @@ var updateComment = function(req,res) {
             console.log(err);
             utils.sendResponse(res, 400, false, 'Please try again later.',err);
         }else {
-            utils.sendResponse(res,200,true,'Comment Updated successfully',Comments);
+            utils.sendResponse(res,200,true,'Comment Updated successfully');
         }
     });
 }
