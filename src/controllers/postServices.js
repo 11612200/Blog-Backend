@@ -36,7 +36,7 @@ const updatePost = function(req,res) {
                 console.log(err);
                 utils.sendResponse(res, 400, false, 'Please try again later.',err);
             }else {
-                utils.sendResponse(res,200,true,'Post Updated successfully',Posts);
+                utils.sendResponse(res,200,true,'Post Updated successfully');
             }
         
         });
